@@ -3,6 +3,8 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 
+import useAuthRoute from './routes/auth.route.js';
+
 const app = express();
 
 app.use(cors({
@@ -16,21 +18,15 @@ app.use(express.static("public"))
 
 app.use(cookieParser())
 
-import useTestRoutes from './routes/apiTest.route.js';
-app.use('/api', useTestRoutes)
-app.use('/api', useTestRoutes)
-// http://localhost:5000/api/testWritingData
+
+// Auth api
+app.use('/api/v1/auth', useAuthRoute);
+app.use('/api/v1/otp', useAuthRoute);
+app.use('/api/v1/auth', useAuthRoute);
+app.use('/api/v1/pass', useAuthRoute);//for forgot password
+app.use('/api/v1/newpass', useAuthRoute);// for reset password
+// http://localhost:5000/api/v1/auth/user-register
 
 
-
-//  routes import
-// import userRoutes from "./routes/user.routes.js"
-
-// routes declaration
-// app.use("/api/v1/user", userRoutes)
-// app.use("/api/v1/login", userRoutes)
-// app.use("/api/v1/sample", userRoutes)
-//  http://localhost:8000/api/v1/user/register
-//  https://localhost:3000/api/v1/user/login
 
 export default app;
