@@ -18,7 +18,7 @@ export const register = asyncHandler(async (req, res) => {
   const { user, verificationCode } = await registerUserService(req.body);
   const safe = user.toObject();
   delete safe.password;
-  res.status(201).json(new ApiResponse(201, "Registered; verify your email", { user: safe, verificationCode }));
+  res.status(201).json(new ApiResponse(201, { user: safe, verificationCode }, "Registered; verify your email",));
   // verification email sending
   await sendVerificationEmail(user.email, verificationCode);
   console.log("Verification  email sent to:", verificationCode);
@@ -27,10 +27,10 @@ export const register = asyncHandler(async (req, res) => {
 
 // Verify user email controller
 export const verifyEmail = asyncHandler(async (req, res) => {
-  const {verificationCode} = req.body;
-  const userId = await User.findOne({ verificationCode: verificationCode });
+  const {userId,verificationCode} = req.body;
+  // const userId = await User.findOne({ verificationCode: verificationCode });
   // const { userId, verificationCode } = req.body;
-  await verifyEmailService(userId, verificationCode);
+  await verifyEmailService(userId , verificationCode);
   console.log("Email verified for user ID:", userId, verificationCode);
   
   res.status(200).json(new ApiResponse(200, "Email verified successfully"));

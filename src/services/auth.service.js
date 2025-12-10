@@ -37,8 +37,10 @@ export const registerUserService = async (
 
 
 // Verify user email (this service also use in forgot password otp verification.)
-export const verifyEmailService = async (userId, receivedCode) => {
+export const verifyEmailService = async ( userId , receivedCode) => {
+
   const user = await User.findById(userId);
+  console.log("Verifying email for user ID:", userId)
   if (!user) throw new ApiError(404, "User not found");
   if (user.isVerified) throw new ApiError(400, "User already verified");
   if (user.verificationCode !== receivedCode) throw new ApiError(400, "Invalid verification token");
