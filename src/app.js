@@ -31,14 +31,14 @@ app.use('/api/v1/newpass', useAuthRoute);// for reset password
 // http://localhost:5000/api/v1/auth/user-register
 
 // Business Profile api
-app.use('/api/v1/', useBusinessProfileRoute);
+app.use('/api/v1/profile', useBusinessProfileRoute);
 // http://localhost:5000/api/v1/business-profile
 
 // Business Financial api
-app.use('/api/v1', useBusinessFinancialRoute);
+app.use('/api/v1/finance', useBusinessFinancialRoute);
 // http://localhost:5000/api/v1/business-financial
 
-app.use('/api/v1', useBusinessHealth);
+app.use('/api/v1/health', useBusinessHealth);
 // http://localhost:5000/api/v1/business-health
 
 export default app;

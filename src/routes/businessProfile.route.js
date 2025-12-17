@@ -5,6 +5,6 @@ import { businessProfile } from "../controllers/businessProfile.controller.js"
 
 const businessProfileRoute = Router();
 
-businessProfileRoute.route("/business-profile", verifyJWT).patch(businessProfile);
+businessProfileRoute.route("/business-profile").patch(verifyJWT, businessProfile);
 
 export default businessProfileRoute;

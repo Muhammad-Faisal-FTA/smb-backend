@@ -3,6 +3,6 @@ import { calculateHealthController } from "../controllers/healthScore.controller
 import { verifyJWT } from "../middleware/auth.middleware.js";
 const useBusinessHealth = Router();
 
-useBusinessHealth.get("/business-health",verifyJWT, calculateHealthController);
+useBusinessHealth.get("/business-health", verifyJWT, calculateHealthController);
 
 export default useBusinessHealth;

@@ -11,19 +11,17 @@ try {
       if(!token){
        throw new ApiError(401, "Unauthorized request🚫")
       }
-      // const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
-      // console.log("This the decoded token: ", decodedToken);
+
       const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 
        console.log("🧩 JWT payload:", decodedToken);
        console.log("🔐 Raw token:", token);
+       console.log("👤 User from DB:", user);
           console.log("🧩 Decoded JWT:", decodedToken);
-         console.log("👤 User from DB:", user);
 
-
-      const userId = decodedToken.user._id;    //!be care effect the ruing health score.
-      const user = await User.findById(decodedToken?._id).select(
-       "-password, -refreshToken"
+      const userId = decodedToken._id;    //!be care effect the ruing health score.
+      const user = await User.findById(decodedToken._id).select(
+       "-password -refreshToken"
       )
       // console.log("User in middleware:", user);
    
