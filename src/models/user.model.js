@@ -49,7 +49,7 @@ const userSchema = new Schema({
 
 //  Hook: pre("save") 
 userSchema.pre("save", async function(next) {
-  if (!this.isModified("password")) return ;
+  if (!this.isModified("password")) return 1;
   this.password = await bcrypt.hash(this.password, 12); // cost 12 for production balance
   this.lastPasswordChange = Date.now();
   // next();
@@ -60,21 +60,32 @@ userSchema.methods.isValidPassword = function(password) {
   return bcrypt.compare(password, this.password);
 };
 
-userSchema.methods.generateAccessToken = function() {
-  return jwt.sign({ id: this._id, role: this.role }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: process.env.ACCESS_TOKEN_EXPIRY });
+// 2. Generate Access Token (Short lived, e.g., 15m)
+userSchema.methods.generateAccessToken = function () {
+  return jwt.sign(
+    {
+      _id: this._id,
+      email: this.email,
+      fullName: this.fullName,
+    },
+    process.env.ACCESS_TOKEN_SECRET,
+    {
+      expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
+    }
+  );
 };
 
-// Use hashed refresh token in DB for safety
-userSchema.methods.setRefreshToken = async function(plainToken) {
-  const hashed = crypto.createHash("sha256").update(plainToken).digest("hex");
-  this.refreshToken = hashed;
-  await this.save();
-};
-
-userSchema.methods.matchRefreshToken = function(plainToken) {
-  if (!this.refreshToken) return false;
-  const hashed = crypto.createHash("sha256").update(plainToken).digest("hex");
-  return hashed === this.refreshToken;
+// 3. Generate Refresh Token (Long lived, e.g., 7d)
+userSchema.methods.generateRefreshToken = function () {
+  return jwt.sign(
+    {
+      _id: this._id,
+    },
+    process.env.REFRESH_TOKEN_SECRET,
+    {
+      expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
+    }
+  );
 };
 
 

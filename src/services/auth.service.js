@@ -7,7 +7,7 @@ import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.utils.js";
 import { sendWelcomeEmail, sendVerificationEmail } from "../emails/Email.js";
 
-const signRefreshToken = (payload) => jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, { expiresIn: process.env.REFRESH_TOKEN_EXPIRY });
+// const signRefreshToken = (payload) => jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, { expiresIn: process.env.REFRESH_TOKEN_EXPIRY });
 
 
 //Register new user 

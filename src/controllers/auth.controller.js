@@ -1,6 +1,6 @@
 import {asyncHandler} from '../utils/asyncHandler.utils.js';
 // import { ApiError } from '../utils/apiError.utils.js';
-import { User } from '../models/user.model.js';
+// import { User } from '../models/user.model.js';
 import { ApiResponse } from '../utils/ApiResponse.utils.js';
 import {sendVerificationEmail} from '../emails/Email.js';
 
@@ -38,8 +38,43 @@ export const verifyEmail = asyncHandler(async (req, res) => {
 
 // Login user controller
 export const login = asyncHandler(async (req, res) => {
-  await loginUserService(req.body.email, req.body.password);
-  res.status(200).json(new ApiResponse(200, "Login successful"));
+  const { email, password } = req.body;
+
+  // 1. FIX: Capture the user returned by the service
+  // Your service should verify password and return the user document
+  const user = await loginUserService(email, password); 
+
+  // 2. FIX: Generate tokens directly on the user instance
+  // (We don't need to query the DB again with findById)
+  const accessToken = user.generateAccessToken();
+  const refreshToken = user.generateRefreshToken();
+
+  // 3. Save the refresh token to the database
+  user.refreshToken = refreshToken;
+  await user.save({ validateBeforeSave: false });
+
+  // 4. Define Cookie Options (This was missing)
+  const options = {
+      httpOnly: true,
+      secure: true, // Set to true if using HTTPS
+  };
+
+  // 5. FIX: Use 'cookie' (singular), not 'cookies'
+  return res
+      .status(200)
+      .cookie("accessToken", accessToken, options)
+      .cookie("refreshToken", refreshToken, options)
+      .json(
+          new ApiResponse(
+              200, 
+              { 
+                  user: { _id: user._id, email: user.email }, // Send safe user data
+                  accessToken, 
+                  refreshToken 
+              }, 
+              "Login successful"
+          )
+      );
 });
 
 // Forgot password controller (to get the email from user) 
