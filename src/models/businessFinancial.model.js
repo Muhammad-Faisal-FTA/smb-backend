@@ -47,7 +47,7 @@ currentLiabilities:{
     required: [true, "Current liabilities is required!"]
 },
 monthlyOperatingExpenses:{
-    type: Number,
+    type: [Number],
     trim: true,
     required: [true, "Monthly operating expenses is required!"]
 },
@@ -113,32 +113,32 @@ interestExpense:{
 scoreLH:{
     type: Number,
     trim: true,
-    required: [true, "Score LH is required!"]  
+    // required: [true, "Score LH is required!"]  
 },
 scorePH:{
     type: Number,   
     trim: true,
-    required: [true, "Score PH is required!"]
+    // required: [true, "Score PH is required!"]
 },
 scoreCS:{
     type: Number,    
     trim: true,
-    required: [true, "Score CS is required!"]
+    // required: [true, "Score CS is required!"]
 },
 scoreEH:{
     type: Number,    
     trim: true,
-    required: [true, "Score EH is required!"]
+    // required: [true, "Score EH is required!"]
 },
 scoreSH:{
     type: Number,   
     trim: true,
-    required: [true, "Score SH is required!"]
+    // required: [true, "Score SH is required!"]
 },
 financialHealthScore:{
     type: Number,    
     trim: true,
-    required: [true, "Financial health score is required!"]
+    // required: [true, "Financial health score is required!"]
 },
 
 

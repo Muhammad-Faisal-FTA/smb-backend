@@ -75,7 +75,7 @@ export const calculateSolvencyScore = data => {
       riskLevel: "Medium",
       message: "Performance is acceptable but requires attention."
     };
-  } else if (profitabilityScore >= 40) {
+  } else if (solvencyScore >= 40) {
     status = {
       label: "Weak",
       color: "orange",

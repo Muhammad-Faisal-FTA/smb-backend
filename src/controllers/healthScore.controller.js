@@ -14,9 +14,9 @@ export const calculateHealthController = asyncHandler(async (req, res) => {
         // IMPORTANT: Check if your DB uses 'owner', 'user', or 'business_id' to link to the user.
         const financialData = await BusinessFinancial.findOne({ 
                 userId: userIdstr  // <--- (MATCH THIS FIELD TO  DATABASE SCHEMA)
-            });
+            }).sort({ createdAt: -1 });
 
-            console.log("weqw qw qweqw qw  eq w eq w e qwe",financialData)
+            console.log("financialData",financialData)
 
     // 3. HANDLE MISSING DATA
     if (!financialData) {

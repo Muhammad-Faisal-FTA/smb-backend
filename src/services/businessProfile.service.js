@@ -51,7 +51,7 @@ export const createBusinessProfileService = async ({
   if (!userId) {
     throw new ApiError(400, "UserId is required");
   }
-
+console.log("patch Api profile: ", userId)
   const businessProfile = await BusinessProfile.findOneAndUpdate(
     // 🔍 Filter (how to find the document)
     { userId },
@@ -71,7 +71,7 @@ export const createBusinessProfileService = async ({
       },
     },
 
-    // ⚙️ Options
+    //  Options
     {
       new: true,     // return updated document
       upsert: true,  // create if not exists
@@ -80,4 +80,10 @@ export const createBusinessProfileService = async ({
   );
 
   return businessProfile;
+};
+
+export const getBusinessProfileDataService = async (userId) => {
+  
+  const businessProfileData = await BusinessProfile.findOne({ userId });
+  return businessProfileData;
 };

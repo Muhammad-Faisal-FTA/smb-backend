@@ -13,16 +13,16 @@ try {
       }
 
       const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-
-       console.log("🧩 JWT payload:", decodedToken);
-       console.log("🔐 Raw token:", token);
-       console.log("👤 User from DB:", user);
-          console.log("🧩 Decoded JWT:", decodedToken);
-
+      
       const userId = decodedToken._id;    //!be care effect the ruing health score.
       const user = await User.findById(decodedToken._id).select(
-       "-password -refreshToken"
-      )
+         "-password -refreshToken"
+        )
+       console.log("🧩 JWT payload:", decodedToken);
+       console.log("🔐 Raw token:", token);
+       console.log("🧩 Decoded JWT:", decodedToken);
+
+         console.log("👤 User from DB:", user);
       // console.log("User in middleware:", user);
    
       console.log("🧩 JWT User: ", user)

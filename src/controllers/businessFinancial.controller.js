@@ -6,7 +6,12 @@ import { createBusinessFinancialService } from "../services/businessFinancial.se
 export const businessFinancial = asyncHandler(async (req, res) => {
     // Call the service to create a business financial
     // console.log( "req", req)
-    const businessFinancial = await createBusinessFinancialService(req.body);
+      const userId = req.user._id
+
+    const businessFinancial = await createBusinessFinancialService({
+    ...req.body,  // ✅ Spread inside object literal
+    userId
+  });
 
     res.status(201).json(new ApiResponse(201, businessFinancial, "Business financial created successfully"));
 });

@@ -74,7 +74,7 @@ export const calculateEfficiencyScore = data => {
       riskLevel: "Medium",
       message: "Performance is acceptable but requires attention."
     };
-  } else if (profitabilityScore >= 40) {
+  } else if (efficiencyScore >= 40) {
     status = {
       label: "Weak",
       color: "orange",

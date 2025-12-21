@@ -19,7 +19,7 @@
 
 import { ApiResponse } from "../utils/ApiResponse.utils.js";
 import { asyncHandler } from "../utils/asyncHandler.utils.js";
-import { createBusinessProfileService } from "../services/businessProfile.service.js";
+import { createBusinessProfileService, getBusinessProfileDataService } from "../services/businessProfile.service.js";
 
 // business profile controller
 export const businessProfile = asyncHandler(async (req, res) => {
@@ -29,10 +29,11 @@ export const businessProfile = asyncHandler(async (req, res) => {
   //   throw new Error(401, "User not authenticated");
   // }
   // merge trusted userId with request payload
-  const businessProfile = await createBusinessProfileService(
-    req.body,
-    // userId
-  );
+  const userId = req.user._id
+  const businessProfile = await createBusinessProfileService({
+    ...req.body,  // ✅ Spread inside object literal
+    userId
+  });
   return res
     .status(201)
     .json(
@@ -43,3 +44,22 @@ export const businessProfile = asyncHandler(async (req, res) => {
       )
     );
 });
+
+
+  export const businessProfileData = asyncHandler(async(req, res) => {
+    const userId = req.user._id;
+    const businessProfileData = await getBusinessProfileDataService(
+      userId
+  );
+
+  return res
+    .status(201)
+    .json(
+      new ApiResponse(
+        201,
+        businessProfileData,
+        "Business profile data successfully"
+      )
+    );
+
+})

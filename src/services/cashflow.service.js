@@ -90,7 +90,7 @@ export const calculateCashflowScore = (
       riskLevel: "Medium",
       message: "Performance is acceptable but requires attention."
     };
-  } else if (profitabilityScore >= 40) {
+  } else if (cashflowScore >= 40) {
     status = {
       label: "Weak",
       color: "orange",

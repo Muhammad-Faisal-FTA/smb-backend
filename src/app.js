@@ -6,8 +6,9 @@ import cors from 'cors';
 import useAuthRoute from './routes/auth.route.js';
 import useBusinessProfileRoute from "./routes/businessProfile.route.js";
 import useBusinessFinancialRoute from "./routes/businessFinancial.route.js";
-import useBusinessHealth from "./routes/healthScore.routes.js"
-
+import useBusinessHealthRoute from "./routes/healthScore.routes.js"
+import useInsightRoute from './routes/insight.route.js'
+import useRecordDailyHistoryRoute from './routes/history.route.js'
 const app = express();  //Express application instance, handle all http req &res.
 
 app.use(cors({
@@ -32,13 +33,20 @@ app.use('/api/v1/newpass', useAuthRoute);// for reset password
 
 // Business Profile api
 app.use('/api/v1/profile', useBusinessProfileRoute);
-// http://localhost:5000/api/v1/business-profile
+// http://localhost:5000/api/v1/profile/business-profile
 
 // Business Financial api
 app.use('/api/v1/finance', useBusinessFinancialRoute);
-// http://localhost:5000/api/v1/business-financial
+// http://localhost:5000/api/v1/finance/business-financial
 
-app.use('/api/v1/health', useBusinessHealth);
-// http://localhost:5000/api/v1/business-health
+app.use('/api/v1/health', useBusinessHealthRoute);
+// http://localhost:5000/api/v1/health/business-health
+
+app.use('/api/v1/ai', useInsightRoute);
+// http://localhost:5000/api/v1/ai/insights
+
+app.use('/api/v1/history', useRecordDailyHistoryRoute);
+// http://localhost:5000/api/v1/history/daily-history
+
 
 export default app;

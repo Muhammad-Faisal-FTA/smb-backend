@@ -1,48 +1,3 @@
-// import { clamp, safeDivide } from "../utils/math.util.js";
-// // import { BusinessFinancial } from "../models/businessFinancial.model.js";
-
-// export const calculateLiquidityScore = (payload) => {
-//   console.log(payload)
-//   const {
-//     cash,
-//     bank_balance,
-//     accounts_receivable,
-//     inventory,
-//     current_assets_other,
-//     current_liabilities,
-//     monthly_operating_expenses
-//   } = payload;
-
-//   const currentAssets =
-//     cash +
-//     bank_balance +
-//     accounts_receivable +
-//     inventory +
-//     current_assets_other;
-
-//   const quickAssets =
-//     cash + bank_balance + accounts_receivable;
-
-//   const CR = safeDivide(currentAssets, current_liabilities);
-//   const QR = safeDivide(quickAssets, current_liabilities);
-//   const runwayMonths = safeDivide(
-//     cash + bank_balance,
-//     monthly_operating_expenses
-//   );
-
-//   const CR_Score = clamp((CR / 2) * 100);
-//   const QR_Score = clamp((QR / 1.5) * 100);
-//   const Runway_Score = clamp((runwayMonths / 6) * 100);
-
-//   const LH =
-//     CR_Score * 0.4 +
-//     QR_Score * 0.3 +
-//     Runway_Score * 0.3;
-
-//   return { LH, CR, QR, runwayMonths };
-// };
-
-
 import { clamp, safeDivide } from "../utils/math.util.js";
 
 export const calculateLiquidityScore = data => {
@@ -69,10 +24,13 @@ export const calculateLiquidityScore = data => {
   const currentRatio = safeDivide(currentAssets, currentLiabilities);
   const quickRatio = safeDivide(quickAssets, currentLiabilities);
   const runwayMonths = safeDivide(
-    cash + bankBalance,
+    cash + bankBalance+
     monthlyOperatingExpenses
   );
-
+  // console.log("Liq subds:" , cash , bankBalance,
+  //   monthlyOperatingExpenses )
+  //   console.log(runwayMonths)
+  
   const currentRatioScore = clamp((currentRatio / 2) * 100);
   const quickRatioScore = clamp((quickRatio / 1.5) * 100);
   const runwayScore = clamp((runwayMonths / 6) * 100);
@@ -81,7 +39,6 @@ export const calculateLiquidityScore = data => {
     currentRatioScore * 0.4 +
     quickRatioScore * 0.3 +
     runwayScore * 0.3;
-
 
         let status;
 
@@ -121,6 +78,12 @@ export const calculateLiquidityScore = data => {
       message: "Immediate financial intervention required."
     };
   }
+
+//  console.log("Liqudity health", liquidityScore,
+//     status,
+//     currentRatio,
+//     quickRatio,
+//     runwayMonths)
 
 
   return {

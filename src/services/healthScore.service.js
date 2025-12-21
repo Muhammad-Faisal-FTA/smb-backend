@@ -7,6 +7,7 @@ import { calculateSolvencyScore } from "./solvency.service.js";
 import { BusinessFinancial } from "../models/businessFinancial.model.js";
 
 export const calculateBusinessHealth = async(payload) => {
+  console.log("Payload in health Score calculation: ", payload)
   const liquidity = calculateLiquidityScore(payload);
   const profitability = calculateProfitabilityScore(payload);
   const efficiency = calculateEfficiencyScore(payload);
@@ -21,16 +22,20 @@ export const calculateBusinessHealth = async(payload) => {
   // 4️⃣ Persist scores in BusinessFinancial
   const update = await BusinessFinancial.findOneAndUpdate(
     { userId: userId},
-    {
-      scoreLH: liquidity.liquidityScore,
-      scorePH: profitability.profitabilityScore,
-      scoreCS: cashflow.cashflowScore,
-      scoreEH: efficiency.efficiencyScore,
-      scoreSH: solvency.solvencyScore,
-    },
+    // {
+    //   scoreLH: liquidity.liquidityScore,  //NaN
+    //   scorePH: profitability.profitabilityScore,
+    //   scoreCS: cashflow.cashflowScore,   //NaN
+    //   scoreEH: efficiency.efficiencyScore,
+    //   scoreSH: solvency.solvencyScore,
+    // },
     { new: true }
   );
-
+console.log("values before Score:", liquidity.liquidityScore,
+      profitability.profitabilityScore,
+       cashflow.cashflowScore,
+     efficiency.efficiencyScore,
+       solvency.solvencyScore,)
   const finalScore =
     liquidity.liquidityScore * 0.25 +
     profitability.profitabilityScore * 0.25 +
