@@ -180,20 +180,26 @@ const generateGeminiInsights = async (data, periodType) => {
       model: "gemini-2.5-flash-lite"
     });
 
-    const prompt = `You are a senior financial analyst AI.
+const prompt = `
+You are a senior financial analyst AI.
 
 Analyze the following ${periodType} financial data and generate insights.
 
-Rules:
-- Be concise and professional
-- Detect risks, trends, and opportunities
+STRICT RULES:
 - Return ONLY valid JSON
-- Do not add explanations outside JSON
+- Do NOT add extra keys
+- Do NOT nest objects incorrectly
+- Do NOT repeat period or overallHealth inside insights
+- insights MUST be an array
+- Each insight MUST contain only: type, message
+- Use clear financial reasoning
+- Be concise and professional
 
 Financial Data:
 ${JSON.stringify(data, null, 2)}
 
-Return JSON in this exact format:
+Return JSON in EXACTLY this structure:
+
 {
   "period": "${periodType}",
   "overallHealth": "Excellent | Good | Moderate | Risky | Critical",
@@ -202,9 +208,11 @@ Return JSON in this exact format:
       "type": "positive | warning | critical | recommendation",
       "message": "Insight text here"
     }
-  ]
+  ],
+  "summary": "One concise executive-level summary paragraph"
 }
 `;
+
 
     const result = await model.generateContent(prompt);
     console.log(result.response.text())

@@ -59,7 +59,7 @@ const dailyHistorySchema = new Schema({
 });
 
 dailyHistorySchema.index(
-  {  "financialData.date": 1 },
+  // {  "financialData.date": 1 },
   { unique: true }
 );
 
