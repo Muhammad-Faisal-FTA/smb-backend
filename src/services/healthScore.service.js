@@ -6,6 +6,9 @@ import { calculateEfficiencyScore } from "./efficiency.service.js";
 import { calculateSolvencyScore } from "./solvency.service.js";
 import { BusinessFinancial } from "../models/businessFinancial.model.js";
 
+import { NotificationService } from "./notification.service.js";
+
+
 export const calculateBusinessHealth = async(payload) => {
   console.log("Payload in health Score calculation: ", payload)
   const liquidity = calculateLiquidityScore(payload);
@@ -22,13 +25,13 @@ export const calculateBusinessHealth = async(payload) => {
   // 4️⃣ Persist scores in BusinessFinancial
   const update = await BusinessFinancial.findOneAndUpdate(
     { userId: userId},
-    // {
-    //   scoreLH: liquidity.liquidityScore,  //NaN
-    //   scorePH: profitability.profitabilityScore,
-    //   scoreCS: cashflow.cashflowScore,   //NaN
-    //   scoreEH: efficiency.efficiencyScore,
-    //   scoreSH: solvency.solvencyScore,
-    // },
+    {
+      scoreLH: liquidity.liquidityScore,  //NaN
+      scorePH: profitability.profitabilityScore,
+      scoreCS: cashflow.cashflowScore,   //NaN
+      scoreEH: efficiency.efficiencyScore,
+      scoreSH: solvency.solvencyScore,
+    },
     { new: true }
   );
 console.log("values before Score:", liquidity.liquidityScore,
@@ -52,6 +55,13 @@ console.log("values before Score:", liquidity.liquidityScore,
       riskLevel: "Low",
       message: "Business is financially strong and stable."
     };
+     await NotificationService.create({
+      userId,
+      type: "CRITICAL",
+      title: "Financial Health Alert",
+      message: "Your financial health is Goog.",
+      category: "HEALTH"
+    });
   } else if (finalScore >= 70) {
     status = {
       label: "Good",
@@ -66,6 +76,13 @@ console.log("values before Score:", liquidity.liquidityScore,
       riskLevel: "Medium",
       message: "Performance is acceptable but requires attention."
     };
+     await NotificationService.create({
+      userId,
+      type: "CRITICAL",
+      title: "Financial Health Alert",
+      message: "Your financial health is critically low.Financial risk is increasing. Action recommended.",
+      category: "HEALTH"
+    });
   } else if (finalScore >= 40) {
     status = {
       label: "Weak",
@@ -73,6 +90,13 @@ console.log("values before Score:", liquidity.liquidityScore,
       riskLevel: "High",
       message: "Financial risk is increasing. Action recommended."
     };
+     await NotificationService.create({
+      userId,
+      type: "CRITICAL",
+      title: "Financial Health Alert",
+      message: "Your financial health is critically low.Financial risk is increasing. Action recommended.",
+      category: "HEALTH"
+    });
   } else {
     status = {
       label: "Critical",

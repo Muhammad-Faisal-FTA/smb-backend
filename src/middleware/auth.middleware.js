@@ -15,6 +15,7 @@ try {
       const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
       
       const userId = decodedToken._id;    //!be care effect the ruing health score.
+      // localStorage.setItem("userId", userId);
       const user = await User.findById(decodedToken._id).select(
          "-password -refreshToken"
         )
