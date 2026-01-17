@@ -1,70 +1,3 @@
-// import { GoogleGenerativeAI } from "@google/generative-ai";
-// import { ApiError } from "../utils/ApiError.utils.js";
-
-// const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-
-
-// //  Generate AI insights using Google Gemini
- 
-// export const generateAIInsightsService = async ({
-//   userId,
-//   periodType, // daily | weekly | monthly
-//   financialData
-// }) => {
-//   if (!userId || !periodType || !financialData) {
-//     throw new ApiError(400, "Missing required parameters for AI insights");
-
-//   }
- 
-//   const model = genAI.getGenerativeModel({
-//     model: "gemini-2.5-flash-lite"
-//   });
-
-//   const prompt = buildInsightPrompt(periodType, financialData);
-
-//   try {
-//     const result = await model.generateContent(prompt);
-//     const responseText = result.response.text();
-//     // const cleanedJson = cleanJsonResponse(responseText);
-
-//     // return JSON.parse(responseText);
-//     console.log(responseText);
-//     return responseText;
-//   } catch (error) {
-//     console.error("Gemini Insight Error:", error);
-//     throw new ApiError(500, "Failed to generate AI insights");
-//   }
-// };
-
-// const buildInsightPrompt = (periodType, data) => {
-//   return `
-// You are a senior financial analyst AI.
-
-// Analyze the following ${periodType} financial data and generate insights.
-
-// Rules:
-// - Be concise and professional
-// - Detect risks, trends, and opportunities
-// - Return ONLY valid JSON
-// - Do not add explanations outside JSON
-
-// Financial Data:
-// ${JSON.stringify(data, null, 2)}
-
-// Return JSON in this exact format:
-// {
-//   "period": "${periodType}",
-//   "overallHealth": "Excellent | Good | Moderate | Risky | Critical",
-//   "insights": [
-//     {
-//       "type": "positive | warning | critical | recommendation",
-//       "message": "Insight text here"
-//     }
-//   ]
-// }
-// `;
-// };
-
 
 import { DailyHistory } from "../models/dailyHistory.model.js";
 import { ApiError } from "../utils/ApiError.utils.js";
@@ -177,7 +110,7 @@ const avg = (arr) => arr.reduce((a, b) => a + b, 0) / arr.length;
 const generateGeminiInsights = async (data, periodType) => {
   try {
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.5-flash-lite"
+      model: process.env.GEMINI_MODEL
     });
 
 const prompt = `

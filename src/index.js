@@ -3,7 +3,7 @@ import app from "./app.js";
 import dotenv from "dotenv";
 import http from "http";
 import { initSocket } from "./socket/index.js";
-import { setupMonthlyReportCron } from './cron/index.js';
+// import { setupMonthlyReportCron } from './cron/index.js';
 
 
 dotenv.config({
@@ -21,7 +21,7 @@ connectDB()
     server.listen(process.env.PORT || 4000 , () =>{
         console.log(`Server is running : ${process.env.PORT}`)
     })
-    setupMonthlyReportCron()
+    // setupMonthlyReportCron()
 })
 .catch((err) =>{
     console.log("Database connection is failed.",err , "😢")

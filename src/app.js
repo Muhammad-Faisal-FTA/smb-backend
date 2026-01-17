@@ -17,6 +17,7 @@ import useExpenseInputRouter from './routes/expenseInput.route.js';
 import useAssetsLiabilitiesRouter from './routes/assetsLiabilities.routes.js'
 import useCustomerReceivablesCtrl from './routes/customerReceivables.routes.js'
 import useVendorPayablesCtrlRouter from './routes/vendorPayables.routes.js'
+import useFinancialForecastRouter from './routes/financialForecast.route.js'
 
 
 const app = express();  //Express application instance, handle all http req &res.
@@ -86,6 +87,6 @@ app.use('/api/v1/input', useCustomerReceivablesCtrl)
 app.use('/api/v1/input', useVendorPayablesCtrlRouter)
 
 
-
+app.use('/api/v1/ai', useFinancialForecastRouter)
 
 export default app;

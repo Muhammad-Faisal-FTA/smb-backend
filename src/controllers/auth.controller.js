@@ -28,6 +28,7 @@ export const register = asyncHandler(async (req, res) => {
 // Verify user email controller
 export const verifyEmail = asyncHandler(async (req, res) => {
   const {userId,verificationCode} = req.body;
+  
   // const userId = await User.findOne({ verificationCode: verificationCode });
   // const { userId, verificationCode } = req.body;
   await verifyEmailService(userId , verificationCode);
@@ -39,7 +40,7 @@ export const verifyEmail = asyncHandler(async (req, res) => {
 // Login user controller
 export const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-
+ 
   // 1. FIX: Capture the user returned by the service
   // Your service should verify password and return the user document
   const user = await loginUserService(email, password); 

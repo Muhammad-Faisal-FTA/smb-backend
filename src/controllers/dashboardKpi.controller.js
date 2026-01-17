@@ -11,102 +11,135 @@
 // })
 
 
-
-import { dashboardKpi, formatCurrency, formatPercentage } from "../services/dashboardKips.service.js";
+import {
+  dashboardKpi,
+  formatCurrency,
+  formatPercentage
+} from "../services/dashboardKips.service.js";
 
 /* ---------------- CONTROLLER: Get Dashboard KPIs ---------------- */
 export const getDashboardKpis = async (req, res) => {
   try {
-    const userId = req.user._id; // Assuming you have auth middleware
-    
-    // Get KPI data
+    const userId = req.user._id; // injected by auth middleware
     const kpiData = await dashboardKpi(userId);
-    
-    // Format response for frontend
-    const formattedResponse = {
-      cards: [
-        {
-          id: "revenue",
-          icon: "dollar",
-          iconColor: "teal",
-          title: formatCurrency(kpiData.revenue.value),
-          label: kpiData.revenue.label,
-          sublabel: kpiData.revenue.sublabel,
-          change: formatPercentage(kpiData.revenue.change),
-          trend: kpiData.revenue.changeType
-        },
-        {
-          id: "expenses",
-          icon: "trending-down",
-          iconColor: "orange",
-          title: formatCurrency(kpiData.expenses.value),
-          label: kpiData.expenses.label,
-          sublabel: kpiData.expenses.sublabel,
-          change: formatPercentage(kpiData.expenses.change),
-          trend: kpiData.expenses.changeType
-        },
-        {
-          id: "profit",
-          icon: "trending-up",
-          iconColor: "green",
-          title: formatCurrency(kpiData.profit.value),
-          label: kpiData.profit.label,
-          sublabel: kpiData.profit.sublabel,
-          change: formatPercentage(kpiData.profit.change),
-          trend: kpiData.profit.changeType
-        },
-        {
-          id: "cashflow",
-          icon: "wallet",
-          iconColor: "teal",
-          title: kpiData.cashflow.status,
-          label: kpiData.cashflow.label,
-          sublabel: kpiData.cashflow.sublabel,
-          change: formatCurrency(kpiData.cashflow.value),
-          trend: kpiData.cashflow.status === "Positive" ? "increase" : "decrease"
-        },
-        {
-          id: "profitability",
-          icon: "pie-chart",
-          iconColor: "teal",
-          title: `${kpiData.profitability.value}%`,
-          label: kpiData.profitability.label,
-          sublabel: kpiData.profitability.sublabel,
-          change: formatPercentage(kpiData.profitability.change),
-          trend: kpiData.profitability.changeType
-        },
-        {
-          id: "liquidity",
-          icon: "droplet",
-          iconColor: kpiData.liquidity.status === "healthy" ? "green" : 
-                     kpiData.liquidity.status === "adequate" ? "yellow" : "red",
-          title: kpiData.liquidity.value.toString(),
-          label: kpiData.liquidity.label,
-          sublabel: kpiData.liquidity.sublabel,
-          change: kpiData.liquidity.change.toString(),
-          trend: kpiData.liquidity.changeType,
-          status: kpiData.liquidity.status
-        }
-      ],
-      chart: kpiData.chart.monthlyData,
-      period: kpiData.period
-    };
 
+    /* ---------------- KPI CARDS ---------------- */
+    const cards = [
+      {
+        id: "revenue",
+        icon: "dollar",
+        iconColor: "teal",
+        title: formatCurrency(kpiData.revenue.value),
+        label: kpiData.revenue.label,
+        sublabel: kpiData.revenue.sublabel,
+        change: formatPercentage(kpiData.revenue.change),
+        trend: kpiData.revenue.changeType
+      },
+      {
+        id: "expenses",
+        icon: "trending-down",
+        iconColor: "orange",
+        title: formatCurrency(kpiData.expenses.value),
+        label: kpiData.expenses.label,
+        sublabel: kpiData.expenses.sublabel,
+        change: formatPercentage(kpiData.expenses.change),
+        trend: kpiData.expenses.changeType
+      },
+      {
+        id: "profit",
+        icon: "trending-up",
+        iconColor: "green",
+        title: formatCurrency(kpiData.profit.value),
+        label: kpiData.profit.label,
+        sublabel: kpiData.profit.sublabel,
+        change: formatPercentage(kpiData.profit.change),
+        trend: kpiData.profit.changeType
+      },
+      {
+        id: "cashflow",
+        icon: "wallet",
+        iconColor: "teal",
+        title: kpiData.cashflow.status,
+        label: kpiData.cashflow.label,
+        sublabel: kpiData.cashflow.sublabel,
+        change: formatCurrency(kpiData.cashflow.value),
+        trend: kpiData.cashflow.value >= 0 ? "increase" : "decrease"
+      },
+      {
+        id: "profitability",
+        icon: "pie-chart",
+        iconColor: "teal",
+        title: `${kpiData.profitability.value}%`,
+        label: kpiData.profitability.label,
+        sublabel: kpiData.profitability.sublabel,
+        change: formatPercentage(kpiData.profitability.change),
+        trend: kpiData.profitability.changeType
+      },
+      {
+        id: "liquidity",
+        icon: "droplet",
+        iconColor:
+          kpiData.liquidity.status === "healthy"
+            ? "green"
+            : kpiData.liquidity.status === "adequate"
+            ? "yellow"
+            : "red",
+        title: kpiData.liquidity.value.toString(),
+        label: kpiData.liquidity.label,
+        sublabel: kpiData.liquidity.sublabel,
+        change: kpiData.liquidity.change.toString(),
+        trend: kpiData.liquidity.changeType,
+        status: kpiData.liquidity.status
+      }
+    ];
+
+    /* ---------------- CHARTS (LAST 6 MONTHS) ---------------- */
+
+   /* ---------------- CHARTS (SAFE GUARD) ---------------- */
+
+const monthlyData = Array.isArray(kpiData?.chart?.monthlyData)
+  ? kpiData.chart.monthlyData
+  : [];
+
+/* Revenue vs Expenses (6 months) */
+const revenueExpenseChart = monthlyData.map(item => ({
+  month: item.month,
+  revenue: item.revenue,
+  expenses: item.expenses
+}));
+
+/* Net Cashflow (Revenue - Expenses) */
+const cashflowChart = monthlyData.map(item => ({
+  month: item.month,
+  value: item.revenue - item.expenses
+}));
+
+
+    /* ---------------- FINAL RESPONSE ---------------- */
     return res.status(200).json({
       success: true,
-      data: formattedResponse,
+      data: {
+        userId: req.user._id,
+        cards,
+        charts: {
+  revenueExpense: revenueExpenseChart,
+  cashflow: cashflowChart
+},
+        period: kpiData.period
+      },
       message: "Dashboard KPIs retrieved successfully"
     });
 
   } catch (error) {
     console.error("Dashboard KPI Error:", error);
-    
+
     return res.status(500).json({
       success: false,
       message: error.message || "Failed to retrieve dashboard KPIs"
     });
   }
 };
+
 
 
 /* ---------------- EXAMPLE API RESPONSE ---------------- */
