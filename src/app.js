@@ -11,6 +11,8 @@ import useInsightRoute from './routes/insight.route.js';
 import useRecordDailyHistoryRoute from './routes/history.route.js';
 import useNotificationRoute  from './routes/notification.route.js';
 import useDashboardKpiRoute from './routes/dashboardKpi.route.js'
+<<<<<<< HEAD
+=======
 import useEmailReportRouter from './routes/emailReport.route.js';
 import useRevenueInput from './routes/revenueInput.routes.js';
 import useExpenseInputRouter from './routes/expenseInput.route.js';
@@ -20,6 +22,7 @@ import useVendorPayablesCtrlRouter from './routes/vendorPayables.routes.js'
 import useFinancialForecastRouter from './routes/financialForecast.route.js'
 
 
+>>>>>>> 2587921485894f1c30523acc081e029fd1555151
 const app = express();  //Express application instance, handle all http req &res.
 
 app.use(cors({
@@ -63,6 +66,11 @@ app.use('/api/v1/notifications', useNotificationRoute);
 // http://localhost:5000/api/v1/notifications/summary
 
 
+<<<<<<< HEAD
+app.use('api/v1/dashboard', useDashboardKpiRoute);
+// http://localhost:5000/api/v1/dashboard/kpi
+
+=======
 app.use('/api/v1/dashboard', useDashboardKpiRoute);
 // http://localhost:5000/api/v1/dashboard/kpi
 
@@ -88,5 +96,6 @@ app.use('/api/v1/input', useVendorPayablesCtrlRouter)
 
 
 app.use('/api/v1/ai', useFinancialForecastRouter)
+>>>>>>> 2587921485894f1c30523acc081e029fd1555151
 
 export default app;

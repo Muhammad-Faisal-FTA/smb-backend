@@ -25,6 +25,13 @@ export const calculateHealthController = asyncHandler(async (req, res) => {
         );
     }
 
+//     const rawData = financialData.toObject
+//   ? financialData.toObject()
+//   : financialData;
+
+//     const payload = normalizeFinancialPayload(rawData, options);
+
+
     const financialHistory = await BusinessFinancial.find({ 
     userId: userId.toString() // Ensure ID matches your DB format
     })
@@ -35,7 +42,7 @@ export const calculateHealthController = asyncHandler(async (req, res) => {
         return res.status(404).json(new ApiResponse(404, null, "No financial data found."));
     }
 
-    const monthlyCashflows = financialHistory.map(record => record.netProfit);
+    const monthlyCashflows = financialHistory.map(record => record.netProfit) || [213,456,789,1656];
     // / We can take the average expenses from history, or just the most recent one
     const recentExpenses = financialHistory[0].monthlyOperatingExpenses;
 
@@ -43,6 +50,7 @@ export const calculateHealthController = asyncHandler(async (req, res) => {
     // 4. CALCULATE
     // Pass the entire data object (not just ID) to the service
     const healthScoreResult = await calculateBusinessHealth(financialData,{
+
         monthlyCashflows,     // The array [100, 200, -50...]
         monthlyExpenses: recentExpenses,
         // ... pass other data from financialHistory[0] (the latest record)
