@@ -2,23 +2,41 @@ import { NotificationService } from "../services/notification.service.js";
 import { asyncHandler } from "../utils/asyncHandler.utils.js";
 import { ApiResponse } from "../utils/ApiResponse.utils.js";
 
+<<<<<<< HEAD
 /**
  * Dashboard summary
  */
 export const getNotificationSummary = asyncHandler(async (req, res) => {
   const summary = await NotificationService.getSummary(req.user.id);
 
+=======
+
+//   Dashboard summary
+
+export const getNotificationSummary = asyncHandler(async (req, res) => {
+  // const userId = ;
+  const summary = await NotificationService.getSummary(req.user.id);
+>>>>>>> 2587921485894f1c30523acc081e029fd1555151
   return res
     .status(200)
     .json(new ApiResponse(200, summary, "Notification summary fetched"));
 });
 
+<<<<<<< HEAD
 /**
  * Alert center list
  */
 export const getNotifications = asyncHandler(async (req, res) => {
   const notifications = await NotificationService.getNotifications(
     req.user.id,
+=======
+
+//  Alert center list
+
+export const getNotifications = asyncHandler(async (req, res) => {
+  const notifications = await NotificationService.getNotifications(
+    req.user._id,
+>>>>>>> 2587921485894f1c30523acc081e029fd1555151
     req.query
   );
 

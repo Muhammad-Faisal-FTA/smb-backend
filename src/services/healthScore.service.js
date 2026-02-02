@@ -5,6 +5,7 @@ import { calculateEfficiencyScore } from "./efficiency.service.js";
 import { calculateSolvencyScore } from "./solvency.service.js";
 import { BusinessFinancial } from "../models/businessFinancial.model.js";
 
+<<<<<<< HEAD
 /**
  * Normalize raw financial payload into
  * a strict, scoring-safe domain object
@@ -76,6 +77,13 @@ export const calculateBusinessHealth = async (
 
   console.log("Payload in health score calculation:", payload);
 
+=======
+import { NotificationService } from "./notification.service.js";
+
+
+export const calculateBusinessHealth = async(payload) => {
+  console.log("Payload in health Score calculation: ", payload)
+>>>>>>> 2587921485894f1c30523acc081e029fd1555151
   const liquidity = calculateLiquidityScore(payload);
   const profitability = calculateProfitabilityScore(payload);
   const efficiency = calculateEfficiencyScore(payload);
@@ -86,6 +94,7 @@ export const calculateBusinessHealth = async (
     payload.monthlyOperatingExpenses
   );
 
+<<<<<<< HEAD
   const safe = (v) => (Number.isFinite(v) ? v : 0);
 
   const userId = payload.userId;
@@ -99,6 +108,17 @@ export const calculateBusinessHealth = async (
       scoreCS: safe(cashflow.cashflowScore),
       scoreEH: safe(efficiency.efficiencyScore),
       scoreSH: safe(solvency.solvencyScore)
+=======
+  // 4️⃣ Persist scores in BusinessFinancial
+  const update = await BusinessFinancial.findOneAndUpdate(
+    { userId: userId},
+    {
+      scoreLH: liquidity.liquidityScore,  //NaN
+      scorePH: profitability.profitabilityScore,
+      scoreCS: cashflow.cashflowScore,   //NaN
+      scoreEH: efficiency.efficiencyScore,
+      scoreSH: solvency.solvencyScore,
+>>>>>>> 2587921485894f1c30523acc081e029fd1555151
     },
     { new: true }
   );
@@ -128,6 +148,13 @@ export const calculateBusinessHealth = async (
       riskLevel: "Low",
       message: "Business is financially strong and stable."
     };
+     await NotificationService.create({
+      userId,
+      type: "CRITICAL",
+      title: "Financial Health Alert",
+      message: "Your financial health is Goog.",
+      category: "HEALTH"
+    });
   } else if (finalScore >= 70) {
     status = {
       label: "Good",
@@ -142,6 +169,13 @@ export const calculateBusinessHealth = async (
       riskLevel: "Medium",
       message: "Performance is acceptable but requires attention."
     };
+     await NotificationService.create({
+      userId,
+      type: "CRITICAL",
+      title: "Financial Health Alert",
+      message: "Your financial health is critically low.Financial risk is increasing. Action recommended.",
+      category: "HEALTH"
+    });
   } else if (finalScore >= 40) {
     status = {
       label: "Weak",
@@ -149,6 +183,13 @@ export const calculateBusinessHealth = async (
       riskLevel: "High",
       message: "Financial risk is increasing. Action recommended."
     };
+     await NotificationService.create({
+      userId,
+      type: "CRITICAL",
+      title: "Financial Health Alert",
+      message: "Your financial health is critically low.Financial risk is increasing. Action recommended.",
+      category: "HEALTH"
+    });
   } else {
     status = {
       label: "Critical",
