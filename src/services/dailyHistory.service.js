@@ -1,5 +1,5 @@
 import { DailyHistory } from "../models/dailyHistory.model.js";
-import { ApiError } from "../utils/ApiError.utils.js";
+// import { ApiError } from "../utils/ApiError.utils.js";
 
 /**
  * Record or update daily financial history

@@ -6,9 +6,11 @@ import cors from 'cors';
 import useAuthRoute from './routes/auth.route.js';
 import useBusinessProfileRoute from "./routes/businessProfile.route.js";
 import useBusinessFinancialRoute from "./routes/businessFinancial.route.js";
-import useBusinessHealthRoute from "./routes/healthScore.routes.js"
-import useInsightRoute from './routes/insight.route.js'
-import useRecordDailyHistoryRoute from './routes/history.route.js'
+import useBusinessHealthRoute from "./routes/healthScore.routes.js";
+import useInsightRoute from './routes/insight.route.js';
+import useRecordDailyHistoryRoute from './routes/history.route.js';
+import useNotificationRoute  from './routes/notification.route.js';
+import useDashboardKpiRoute from './routes/dashboardKpi.route.js'
 const app = express();  //Express application instance, handle all http req &res.
 
 app.use(cors({
@@ -47,6 +49,13 @@ app.use('/api/v1/ai', useInsightRoute);
 
 app.use('/api/v1/history', useRecordDailyHistoryRoute);
 // http://localhost:5000/api/v1/history/daily-history
+
+app.use('/api/v1/notifications', useNotificationRoute);
+// http://localhost:5000/api/v1/notifications/summary
+
+
+app.use('api/v1/dashboard', useDashboardKpiRoute);
+// http://localhost:5000/api/v1/dashboard/kpi
 
 
 export default app;
