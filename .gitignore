@@ -1,9 +1,8 @@
 node_modules/
 dist/
-.env
 .DS_Store   
-.vscode/
 .idea/  
 
 =======
 >>>>>>> 2587921485894f1c30523acc081e029fd1555151
+config.bat

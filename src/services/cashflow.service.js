@@ -1,37 +1,10 @@
-// import { clamp, mean, stdDev, safeDivide } from "../utils/math.util.js";
-
-// export const calculateCashflowScore = (monthlyCashflows, monthlyExpenses) => {
-//   const avg = mean(monthlyCashflows);
-//   const sd = stdDev(monthlyCashflows);
-
-//   const volatility = safeDivide(sd, Math.abs(avg), 1);
-//   const positiveMonths =
-//     monthlyCashflows.filter(v => v > 0).length;
-
-//   const Vol_Score = clamp(100 - volatility * 100);
-//   const PCR_Score = clamp(
-//     (positiveMonths / monthlyCashflows.length) * 100
-//   );
-
-//   const coverage = safeDivide(avg, monthlyExpenses);
-//   const Coverage_Score = clamp(coverage * 50);
-
-//   const CS =
-//     Vol_Score * 0.4 +
-//     PCR_Score * 0.3 +
-//     Coverage_Score * 0.3;
-
-//   return { CS, volatility, coverage };
-// };
-
-
 import { clamp, mean, stdDev, safeDivide } from "../utils/math.util.js";
 
 export const calculateCashflowScore = (
   monthlyCashflows,
   monthlyOperatingExpenses
 ) => {
-  if (!Array.isArray(monthlyCashflows) || monthlyCashflows.length < 3) {
+  if (!Array.isArray(monthlyCashflows) || monthlyCashflows.length < 1) {
     return {
       cashflowScore: 0,
       volatility: null,

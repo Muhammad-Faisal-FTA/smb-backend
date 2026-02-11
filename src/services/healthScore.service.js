@@ -5,85 +5,15 @@ import { calculateEfficiencyScore } from "./efficiency.service.js";
 import { calculateSolvencyScore } from "./solvency.service.js";
 import { BusinessFinancial } from "../models/businessFinancial.model.js";
 
-<<<<<<< HEAD
-/**
- * Normalize raw financial payload into
- * a strict, scoring-safe domain object
- */
-function normalizeFinancialPayload(financialData, options = {}) {
-  // Convert Mongoose doc → plain object so spread works correctly
-  const data = financialData.toObject ? financialData.toObject() : financialData;
-
-  const start = new Date(data.periodStart);
-  const end = new Date(data.periodEnd);
-
-  let durationInMonths = 12;
-
-  if (!isNaN(start) && !isNaN(end) && end > start) {
-    durationInMonths = (end - start) / (1000 * 60 * 60 * 24 * 30);
-  }
-
-  const currentAssets =
-    (data.cash || 0) +
-    (data.bankBalance || 0) +
-    (data.accountsReceivable || 0) +
-    (data.inventory || 0) +
-    (data.currentAssetsOther || 0);
-
-  const operatingProfit =
-    (data.revenue || 0) - (data.operatingExpenses || 0);
-
-  const hasTimeSeriesData =
-    Array.isArray(options.monthlyCashflows) &&
-    options.monthlyCashflows.length > 1;
-
-  if (hasTimeSeriesData) {
-    const monthlyExpenses = Array.isArray(options.monthlyExpenses)
-      ? options.monthlyExpenses
-      : [Number(options.monthlyExpenses || 0)];
-
-    const avgMonthlyExpenses =
-      monthlyExpenses.reduce((a, b) => a + Number(b || 0), 0) /
-      monthlyExpenses.length;
-
-    return {
-      ...data,                          // ✅ now spreads the actual fields
-      scoringMode: "TIME_SERIES",
-      currentAssets,
-      operatingProfit,
-      monthlyCashflows: options.monthlyCashflows.map(Number),
-      monthlyOperatingExpenses: avgMonthlyExpenses
-    };
-  }
-
-  return {
-    ...data,                            // ✅ now spreads the actual fields
-    scoringMode: "DURATION_BASED",
-    currentAssets,
-    operatingProfit,
-    monthlyCashflows: [Number(data.netProfit || 0) / durationInMonths],
-    monthlyOperatingExpenses: Number(data.operatingExpenses || 0) / durationInMonths
-  };
-}
-
-/**
- * Main business health calculation
- */
-export const calculateBusinessHealth = async (
-  financialData,
-  options = {}
-) => {
-  const payload = normalizeFinancialPayload(financialData, options);
-
-  console.log("Payload in health score calculation:", payload);
-
-=======
 import { NotificationService } from "./notification.service.js";
 
 
 export const calculateBusinessHealth = async(payload) => {
   console.log("Payload in health Score calculation: ", payload)
->>>>>>> 2587921485894f1c30523acc081e029fd1555151
+
+    const safe = (v) => (Number.isFinite(v) ? v : 0);
+
+
   const liquidity = calculateLiquidityScore(payload);
   const profitability = calculateProfitabilityScore(payload);
   const efficiency = calculateEfficiencyScore(payload);
@@ -93,22 +23,7 @@ export const calculateBusinessHealth = async(payload) => {
     payload.monthlyCashflows,
     payload.monthlyOperatingExpenses
   );
-
-<<<<<<< HEAD
-  const safe = (v) => (Number.isFinite(v) ? v : 0);
-
-  const userId = payload.userId;
-
-  // ✅ Persist individual scores
-  await BusinessFinancial.findOneAndUpdate(
-    { userId },
-    {
-      scoreLH: safe(liquidity.liquidityScore),
-      scorePH: safe(profitability.profitabilityScore),
-      scoreCS: safe(cashflow.cashflowScore),
-      scoreEH: safe(efficiency.efficiencyScore),
-      scoreSH: safe(solvency.solvencyScore)
-=======
+  const userId = payload.userId;  
   // 4️⃣ Persist scores in BusinessFinancial
   const update = await BusinessFinancial.findOneAndUpdate(
     { userId: userId},
@@ -118,7 +33,6 @@ export const calculateBusinessHealth = async(payload) => {
       scoreCS: cashflow.cashflowScore,   //NaN
       scoreEH: efficiency.efficiencyScore,
       scoreSH: solvency.solvencyScore,
->>>>>>> 2587921485894f1c30523acc081e029fd1555151
     },
     { new: true }
   );
