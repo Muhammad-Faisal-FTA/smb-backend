@@ -1,16 +1,3 @@
-<<<<<<< HEAD
-import { asyncHandler } from "../utils/asyncHandler.utils.js";
-import { ApiResponse } from "../utils/ApiResponse.utils.js";
-import {dashboardKpi} from "../services/dashboardKips.service.js"
-
-export const dashboardKpiCtrl = asyncHandler(async(req, res) => {
-    const kpis = await dashboardKpi();
-
-    res.status(201).json(
-    new ApiResponse(201, kpis, "successfully")
-  );
-})
-=======
 // import { asyncHandler } from "../utils/asyncHandler.utils.js";
 // import { ApiResponse } from "../utils/ApiResponse.utils.js";
 // import {dashboardKpi} from "../services/dashboardKips.service.js"
@@ -252,4 +239,3 @@ const cashflowChart = monthlyData.map(item => ({
   "message": "Dashboard KPIs retrieved successfully"
 }
 */
->>>>>>> 2587921485894f1c30523acc081e029fd1555151
